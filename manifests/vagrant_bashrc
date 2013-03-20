@@ -1,0 +1,12 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# for puppet dev environment
+ENVPUPPET_BASEDIR=/Sandbox
+export ENVPUPPET_BASEDIR
+
+eval `/Sandbox/puppet/ext/envpuppet`
