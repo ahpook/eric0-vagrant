@@ -8,13 +8,10 @@ VAGRANTFILE_API_VERSION = "2"
 # to run puppet from the shared filesystem. but that means some setup
 # is needed to prepare the environment then propagate it through sudo
 myscript = <<END
-yum -y install ruby
+rpm -Uvh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+yum -y install ruby rubygem-json puppet
 sed -ie '/secure_path/d' /etc/sudoers
 [[ `grep RUBYLIB /etc/sudoers` ]] || echo 'Defaults   env_keep += "RUBYLIB PATH"'  >> /etc/sudoers
-[[ `grep ENVPUPPET /home/vagrant/.bashrc` ]] || echo '# for puppet dev environment
-ENVPUPPET_BASEDIR=/Sandbox
-export ENVPUPPET_BASEDIR
-eval `/Sandbox/puppet/ext/envpuppet`' >> /home/vagrant/.bashrc
 END
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -24,20 +21,56 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define :glitched do |glitched_config|
-     glitched_config.vm.box = "centos64"
-     glitched_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-     glitched_config.vm.hostname = "glitched.local"
-     glitched_config.vm.provision :shell, inline: myscript
-     glitched_config.vm.provision :puppet
+    glitched_config.vm.box = "centos64"
+    glitched_config.vm.network "private_network", ip: "172.16.26.146"
+    glitched_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    glitched_config.vm.hostname = "glitched.local"
+    glitched_config.vm.provision :shell, inline: myscript
+    glitched_config.vm.provision :puppet
   end
 
   config.vm.define :deglitch do |deglitch_config|
-     deglitch_config.vm.box = "centos64"
-     deglitch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-     deglitch_config.vm.hostname = "deglitch.local"
-     deglitch_config.vm.provision :shell, inline: myscript
-     deglitch_config.vm.provision :puppet
+    deglitch_config.vm.box = "centos64"
+    deglitch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    deglitch_config.vm.hostname = "deglitch.local"
+    deglitch_config.vm.provision :shell, inline: myscript
+    deglitch_config.vm.provision :puppet
   end
+
+  config.vm.define :cheffy do |cheffy_config|
+    cheffy_config.vm.box = "centos64"
+    cheffy_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    cheffy_config.vm.hostname = "cheffy.local"
+    cheffy_config.vm.provision :shell, inline: myscript
+    cheffy_config.vm.provision :puppet
+  end
+
+  config.vm.define :victim do |victim_config|
+    victim_config.vm.box = "centos64"
+    victim_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    victim_config.vm.hostname = "victim.local"
+    victim_config.vm.provision :shell, inline: myscript
+    victim_config.vm.provision :puppet
+  end
+
+  config.vm.define :gl5tch do |gl5tch_config|
+    gl5tch_config.vm.box = "centos5"
+    gl5tch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    gl5tch_config.vm.hostname = "gl5tch.local"
+    gl5tch_config.vm.provision :shell, inline: myscript
+    gl5tch_config.vm.provision :puppet
+  end
+
+  config.vm.define :glutch do |glutch_config|
+    glutch_config.vm.box = "puppetlabs/ubuntu-14.04-64-puppet"
+    glutch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    glutch_config.vm.hostname = "glutch.local"
+    glutch_config.vm.provision :puppet
+  end
+ 
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  # config.vm.box_url = "http://domain.com/path/to/above.box"
  
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
@@ -81,6 +114,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # View the documentation for the provider you're using for more
   # information on available options.
+
+config.vm.provider "vmware_fusion" do |v|
+  v.vmx["memsize"] = "3300"
+end
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
