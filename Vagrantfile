@@ -19,20 +19,40 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
+  # plugin configuration for landrush - https://github.com/phinze/landrush
+  config.landrush.enabled = true
+  config.landrush.tld = 'vmlocal'
+  config.landrush.upstream '10.240.0.10'
+
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define :glitched do |glitched_config|
-    glitched_config.vm.box = "centos64"
-    glitched_config.vm.network "private_network", ip: "172.16.26.146"
+    glitched_config.vm.box = "puppetlabs/centos-7.0-64-puppet"
     glitched_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    glitched_config.vm.hostname = "glitched.local"
+    glitched_config.vm.hostname = "glitched.vmlocal"
     glitched_config.vm.provision :shell, inline: myscript
     glitched_config.vm.provision :puppet
   end
 
+  config.vm.define :ditched do |ditched_config|
+    ditched_config.vm.box = "dhoppe/debian-8.1.0-amd64-nocm"
+    ditched_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    ditched_config.vm.hostname = "ditched.vmlocal"
+#    ditched_config.vm.provision :shell, inline: myscript
+#    ditched_config.vm.provision :puppet
+  end
+
+  config.vm.define :glitcher do |glitcher_config|
+    glitcher_config.vm.box = "puppetlabs/centos-7.2-64-nocm"
+    glitcher_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
+    glitcher_config.vm.hostname = "glitcher.vmlocal"
+    glitcher_config.vm.provision :shell, inline: myscript
+    glitcher_config.vm.provision :puppet
+  end
+
   config.vm.define :deglitch do |deglitch_config|
-    deglitch_config.vm.box = "centos64"
+    deglitch_config.vm.box = "puppetlabs/centos-6.5-64-puppet"
     deglitch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    deglitch_config.vm.hostname = "deglitch.local"
+    deglitch_config.vm.hostname = "deglitch.vmlocal"
     deglitch_config.vm.provision :shell, inline: myscript
     deglitch_config.vm.provision :puppet
   end
@@ -40,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define :cheffy do |cheffy_config|
     cheffy_config.vm.box = "centos64"
     cheffy_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    cheffy_config.vm.hostname = "cheffy.local"
+    cheffy_config.vm.hostname = "cheffy.vmlocal"
     cheffy_config.vm.provision :shell, inline: myscript
     cheffy_config.vm.provision :puppet
   end
@@ -48,7 +68,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define :victim do |victim_config|
     victim_config.vm.box = "centos64"
     victim_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    victim_config.vm.hostname = "victim.local"
+    victim_config.vm.hostname = "victim.vmlocal"
     victim_config.vm.provision :shell, inline: myscript
     victim_config.vm.provision :puppet
   end
@@ -56,7 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define :gl5tch do |gl5tch_config|
     gl5tch_config.vm.box = "centos5"
     gl5tch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    gl5tch_config.vm.hostname = "gl5tch.local"
+    gl5tch_config.vm.hostname = "gl5tch.vmlocal"
     gl5tch_config.vm.provision :shell, inline: myscript
     gl5tch_config.vm.provision :puppet
   end
@@ -64,7 +84,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define :glutch do |glutch_config|
     glutch_config.vm.box = "puppetlabs/ubuntu-14.04-64-puppet"
     glutch_config.vm.synced_folder "/Users/eric/Sandbox", "/Sandbox"
-    glutch_config.vm.hostname = "glutch.local"
+    glutch_config.vm.hostname = "glutch.vmlocal"
     glutch_config.vm.provision :puppet
   end
  
