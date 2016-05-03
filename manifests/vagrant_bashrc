@@ -9,4 +9,6 @@ fi
 ENVPUPPET_BASEDIR=/Sandbox
 export ENVPUPPET_BASEDIR
 
-eval `/Sandbox/puppet/ext/envpuppet`
+#eval `/Sandbox/puppet/ext/envpuppet`
+
+export PATH=/opt/puppetlabs/bin:$PATH
